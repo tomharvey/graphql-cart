@@ -1,0 +1,29 @@
+type Cart {
+	PK: String!
+	SK: String!
+	cartActions: [CartAction]
+	type: String!
+}
+
+type CartAction {
+	PK: String!
+	SK: String!
+	action: String!
+	photoId: String!
+	productId: String!
+	quantity: Int
+	time: Int
+	type: String!
+}
+
+type Mutation {
+	createCart(PK: ID!, SK: String!, type: String!): Cart
+		@aws_apikey
+
+	createCartAction(PK: ID!, SK: String!, type: String!, action: String!, productId: String!, quantity: Int,!, photoId: String!, time: Int!): CartAction
+		@aws_apikey
+}
+
+type Query {
+	getCart(PK: ID!): Cart @aws_apikey
+}

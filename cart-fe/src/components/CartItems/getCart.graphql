@@ -1,0 +1,12 @@
+query getCart {
+  getCart(cookieId: "") {
+    cartEvents {
+      action
+      cookieId
+      createdAt
+      photoId
+      productId
+      quantity
+    }
+  }
+}

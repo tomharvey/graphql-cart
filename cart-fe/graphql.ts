@@ -46,47 +46,46 @@ export type Scalars = {
 
 export type Cart = {
   __typename?: 'Cart';
-  PK: Scalars['String']['output'];
-  SK: Scalars['String']['output'];
-  cartActions?: Maybe<Array<Maybe<CartAction>>>;
-  type: Scalars['String']['output'];
+  cartEvents?: Maybe<Array<Maybe<CartEvent>>>;
+  cookieId: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
 };
 
-export type CartAction = {
-  __typename?: 'CartAction';
-  PK: Scalars['String']['output'];
-  SK: Scalars['String']['output'];
-  action: Scalars['String']['output'];
+export enum CartAction {
+  Add = 'ADD',
+  Remove = 'REMOVE'
+}
+
+export type CartEvent = {
+  __typename?: 'CartEvent';
+  action: CartAction;
+  cookieId: Scalars['String']['output'];
+  createdAt: Scalars['String']['output'];
   photoId: Scalars['String']['output'];
   productId: Scalars['String']['output'];
-  quantity?: Maybe<Scalars['Int']['output']>;
-  time?: Maybe<Scalars['Int']['output']>;
-  type: Scalars['String']['output'];
+  quantity: Scalars['Int']['output'];
 };
 
 export type Mutation = {
   __typename?: 'Mutation';
   createCart?: Maybe<Cart>;
-  createCartAction?: Maybe<CartAction>;
+  createCartEvent?: Maybe<CartEvent>;
 };
 
 
 export type MutationCreateCartArgs = {
-  PK: Scalars['ID']['input'];
-  SK: Scalars['String']['input'];
-  type: Scalars['String']['input'];
+  cookieId: Scalars['String']['input'];
+  createdAt: Scalars['String']['input'];
 };
 
 
-export type MutationCreateCartActionArgs = {
-  PK: Scalars['ID']['input'];
-  SK: Scalars['String']['input'];
-  action: Scalars['String']['input'];
+export type MutationCreateCartEventArgs = {
+  action: CartAction;
+  cookieId: Scalars['String']['input'];
+  createdAt: Scalars['String']['input'];
   photoId: Scalars['String']['input'];
   productId: Scalars['String']['input'];
   quantity: Scalars['Int']['input'];
-  time: Scalars['Int']['input'];
-  type: Scalars['String']['input'];
 };
 
 export type Query = {
@@ -96,75 +95,100 @@ export type Query = {
 
 
 export type QueryGetCartArgs = {
-  PK: Scalars['ID']['input'];
+  cookieId: Scalars['String']['input'];
 };
 
-export type AddCartItemMutationVariables = Exact<{ [key: string]: never; }>;
+export type AddCartMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AddCartItemMutation = { __typename?: 'Mutation', createCartAction?: { __typename?: 'CartAction', action: string, photoId: string, productId: string, time?: number | null, quantity?: number | null } | null };
+export type AddCartMutation = { __typename?: 'Mutation', createCart?: { __typename?: 'Cart', cookieId: string, createdAt: string } | null };
 
-export type CartItemsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type CartItemsQuery = { __typename?: 'Query', getCart?: { __typename?: 'Cart', cartActions?: Array<{ __typename?: 'CartAction', action: string, photoId: string, productId: string, quantity?: number | null, time?: number | null } | null> | null } | null };
+export type AddCartEventMutationVariables = Exact<{ [key: string]: never; }>;
 
 
-export const AddCartItemDocument = `
-    mutation AddCartItem {
-  createCartAction(
-    action: ""
-    photoId: ""
-    PK: ""
-    productId: ""
-    quantity: 10
-    SK: ""
-    time: 10
-    type: ""
-  ) {
-    action
-    photoId
-    productId
-    time
-    quantity
+export type AddCartEventMutation = { __typename?: 'Mutation', createCartEvent?: { __typename?: 'CartEvent', action: CartAction, cookieId: string, createdAt: string, photoId: string, productId: string, quantity: number } | null };
+
+export type GetCartQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCartQuery = { __typename?: 'Query', getCart?: { __typename?: 'Cart', cartEvents?: Array<{ __typename?: 'CartEvent', action: CartAction, cookieId: string, createdAt: string, photoId: string, productId: string, quantity: number } | null> | null } | null };
+
+
+export const AddCartDocument = `
+    mutation addCart {
+  createCart(cookieId: "", createdAt: "") {
+    cookieId
+    createdAt
   }
 }
     `;
-export const useAddCartItemMutation = <
+export const useAddCartMutation = <
       TError = unknown,
       TContext = unknown
     >(
       dataSource: { endpoint: string, fetchParams?: RequestInit },
-      options?: UseMutationOptions<AddCartItemMutation, TError, AddCartItemMutationVariables, TContext>
+      options?: UseMutationOptions<AddCartMutation, TError, AddCartMutationVariables, TContext>
     ) =>
-    useMutation<AddCartItemMutation, TError, AddCartItemMutationVariables, TContext>(
-      ['AddCartItem'],
-      (variables?: AddCartItemMutationVariables) => fetcher<AddCartItemMutation, AddCartItemMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, AddCartItemDocument, variables)(),
+    useMutation<AddCartMutation, TError, AddCartMutationVariables, TContext>(
+      ['addCart'],
+      (variables?: AddCartMutationVariables) => fetcher<AddCartMutation, AddCartMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, AddCartDocument, variables)(),
       options
     );
-export const CartItemsDocument = `
-    query CartItems {
-  getCart(PK: "") {
-    cartActions {
+export const AddCartEventDocument = `
+    mutation addCartEvent {
+  createCartEvent(
+    action: ADD
+    cookieId: ""
+    createdAt: ""
+    photoId: ""
+    productId: ""
+    quantity: 1
+  ) {
+    action
+    cookieId
+    createdAt
+    photoId
+    productId
+    quantity
+  }
+}
+    `;
+export const useAddCartEventMutation = <
+      TError = unknown,
+      TContext = unknown
+    >(
+      dataSource: { endpoint: string, fetchParams?: RequestInit },
+      options?: UseMutationOptions<AddCartEventMutation, TError, AddCartEventMutationVariables, TContext>
+    ) =>
+    useMutation<AddCartEventMutation, TError, AddCartEventMutationVariables, TContext>(
+      ['addCartEvent'],
+      (variables?: AddCartEventMutationVariables) => fetcher<AddCartEventMutation, AddCartEventMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, AddCartEventDocument, variables)(),
+      options
+    );
+export const GetCartDocument = `
+    query getCart {
+  getCart(cookieId: "") {
+    cartEvents {
       action
+      cookieId
+      createdAt
       photoId
       productId
       quantity
-      time
     }
   }
 }
     `;
-export const useCartItemsQuery = <
-      TData = CartItemsQuery,
+export const useGetCartQuery = <
+      TData = GetCartQuery,
       TError = unknown
     >(
       dataSource: { endpoint: string, fetchParams?: RequestInit },
-      variables?: CartItemsQueryVariables,
-      options?: UseQueryOptions<CartItemsQuery, TError, TData>
+      variables?: GetCartQueryVariables,
+      options?: UseQueryOptions<GetCartQuery, TError, TData>
     ) =>
-    useQuery<CartItemsQuery, TError, TData>(
-      variables === undefined ? ['CartItems'] : ['CartItems', variables],
-      fetcher<CartItemsQuery, CartItemsQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, CartItemsDocument, variables),
+    useQuery<GetCartQuery, TError, TData>(
+      variables === undefined ? ['getCart'] : ['getCart', variables],
+      fetcher<GetCartQuery, GetCartQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, GetCartDocument, variables),
       options
     );

@@ -1,0 +1,10 @@
+mutation addCartEvent {
+  createCartEvent(action: ADD, cookieId: "", createdAt: "", photoId: "", productId: "", quantity: 1) {
+    action
+    cookieId
+    createdAt
+    photoId
+    productId
+    quantity
+  }
+}

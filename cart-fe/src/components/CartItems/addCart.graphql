@@ -1,0 +1,6 @@
+mutation addCart {
+  createCart(cookieId: "", createdAt: "") {
+    cookieId
+    createdAt
+  }
+}

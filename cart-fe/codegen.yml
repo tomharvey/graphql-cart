@@ -1,6 +1,6 @@
 overwrite: true
 schema:
-  - './src/schema.graphql'
+  - '../cdk/lib/schema.graphql'
   - './appsync.graphql'
 documents: 'src/**/*.graphql'
 generates:

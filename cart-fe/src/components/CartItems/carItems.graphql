@@ -1,0 +1,11 @@
+query CartItems {
+  getCart(PK: "") {
+    cartActions {
+      action
+      photoId
+      productId
+      quantity
+      time
+    }
+  }
+}

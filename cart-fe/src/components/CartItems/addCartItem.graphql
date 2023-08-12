@@ -1,0 +1,9 @@
+mutation AddCartItem {
+  createCartAction(action: "", photoId: "", PK: "", productId: "", quantity: 10, SK: "", time: 10, type: "") {
+    action
+    photoId
+    productId
+    time
+    quantity
+  }
+}

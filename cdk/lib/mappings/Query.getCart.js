@@ -1,37 +1,36 @@
-import { util } from '@aws-appsync/utils'
-
 export function request(ctx) {
+	const pk = "COOKIE#" + ctx.args.cookieId
 	return {
 		version: '2017-02-28',
 		operation: 'Query',
 		query: {
 			expression: 'PK = :pk',
 			expressionValues: {
-				':pk': util.dynamodb.toDynamoDB(ctx.args.PK),
+				':pk': {'S': pk},
 			},
 		},
 	}
 }
 
 export function response(ctx) {
-	const cartActions = []
-	let PK, SK, type
+	const cartEvents = []
+	let cookieId
+	let createdAt
 
 	for (let item of ctx.result.items) {
-		if (item.type === 'cart') {
-			PK = item['PK']
-			SK = item['SK']
-			type = item['type']
+		const itemClassType = item['SK'].split("#")[0]
+		if (itemClassType === 'CART') {
+			cookieId = item['cookieId']
+			createdAt = item['createdAt']
 		}
-		if (item.type === 'cartAction') {
-			cartActions.push(item)
+		if (itemClassType === 'CARTEVENT') {
+			cartEvents.push(item)
 		}
 	}
 
 	return {
-		PK,
-		SK,
-		cartActions,
-		type,
+		cookieId,
+		createdAt,
+		cartEvents,
 	}
 }

@@ -1,6 +1,6 @@
 import { Template } from 'aws-cdk-lib/assertions';
 import * as cdk from 'aws-cdk-lib';
-import * as AppsyncCdk from '../lib/appsync-cdk-stack';
+import * as AppsyncCdk from '../lib/cart-stack';
 
 test('Testing Stack', () => {
     const app = new cdk.App();

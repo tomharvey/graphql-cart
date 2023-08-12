@@ -1,29 +1,42 @@
 type Cart {
-	PK: String!
-	SK: String!
-	cartActions: [CartAction]
-	type: String!
+	cookieId: String!
+	cartEvents: [CartEvent]
+	createdAt: String!
 }
 
-type CartAction {
-	PK: String!
-	SK: String!
-	action: String!
+type CartEvent {
+	action: CartAction!
+	cookieId: String!
+	createdAt: String!
 	photoId: String!
 	productId: String!
-	quantity: Int
-	time: Int
-	type: String!
+	quantity: Int!
 }
 
 type Mutation {
-	createCart(PK: ID!, SK: String!, type: String!): Cart
+	createCart(
+		cookieId: String!,
+		createdAt: String!
+	): Cart
 		@aws_apikey
 
-	createCartAction(PK: ID!, SK: String!, type: String!, action: String!, productId: String!, quantity: Int,!, photoId: String!, time: Int!): CartAction
+	createCartEvent(
+		action: CartAction!
+		cookieId: String!
+		createdAt: String!
+		photoId: String!
+		productId: String!
+		quantity: Int!
+	): CartEvent
 		@aws_apikey
 }
 
+enum CartAction {
+	ADD
+	REMOVE
+}
+
 type Query {
-	getCart(PK: ID!): Cart @aws_apikey
+	getCart(cookieId: String!): Cart
+		@aws_apikey
 }

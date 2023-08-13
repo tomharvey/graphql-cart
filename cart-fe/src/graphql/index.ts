@@ -98,12 +98,22 @@ export type QueryGetCartArgs = {
   cookieId: Scalars['String']['input'];
 };
 
-export type AddCartMutationVariables = Exact<{ [key: string]: never; }>;
+export type AddCartMutationVariables = Exact<{
+  cookieId: Scalars['String']['input'];
+  createdAt: Scalars['String']['input'];
+}>;
 
 
 export type AddCartMutation = { __typename?: 'Mutation', createCart?: { __typename?: 'Cart', cookieId: string, createdAt: string } | null };
 
-export type AddCartEventMutationVariables = Exact<{ [key: string]: never; }>;
+export type AddCartEventMutationVariables = Exact<{
+  cookieId: Scalars['String']['input'];
+  createdAt: Scalars['String']['input'];
+  action: CartAction;
+  photoId: Scalars['String']['input'];
+  productId: Scalars['String']['input'];
+  quantity: Scalars['Int']['input'];
+}>;
 
 
 export type AddCartEventMutation = { __typename?: 'Mutation', createCartEvent?: { __typename?: 'CartEvent', action: CartAction, cookieId: string, createdAt: string, photoId: string, productId: string, quantity: number } | null };
@@ -117,8 +127,8 @@ export type GetCartQuery = { __typename?: 'Query', getCart?: { __typename?: 'Car
 
 
 export const AddCartDocument = `
-    mutation addCart {
-  createCart(cookieId: "", createdAt: "") {
+    mutation addCart($cookieId: String!, $createdAt: String!) {
+  createCart(cookieId: $cookieId, createdAt: $createdAt) {
     cookieId
     createdAt
   }
@@ -134,14 +144,14 @@ export const useAddCartMutation = <
       options
     );
 export const AddCartEventDocument = `
-    mutation addCartEvent {
+    mutation addCartEvent($cookieId: String!, $createdAt: String!, $action: CartAction!, $photoId: String!, $productId: String!, $quantity: Int!) {
   createCartEvent(
-    action: ADD
-    cookieId: ""
-    createdAt: ""
-    photoId: ""
-    productId: ""
-    quantity: 1
+    cookieId: $cookieId
+    createdAt: $createdAt
+    action: $action
+    photoId: $photoId
+    productId: $productId
+    quantity: $quantity
   ) {
     action
     cookieId

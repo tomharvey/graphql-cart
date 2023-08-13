@@ -1,5 +1,19 @@
-mutation addCartEvent {
-  createCartEvent(action: ADD, cookieId: "", createdAt: "", photoId: "", productId: "", quantity: 1) {
+mutation addCartEvent (
+  $cookieId: String!,
+  $createdAt: String!,
+  $action: CartAction!,
+  $photoId: String!,
+  $productId: String!,
+  $quantity: Int!
+) {
+  createCartEvent(
+    cookieId: $cookieId,
+    createdAt: $createdAt,
+    action: $action,
+    photoId: $photoId,
+    productId: $productId,
+    quantity: $quantity
+  ) {
     action
     cookieId
     createdAt

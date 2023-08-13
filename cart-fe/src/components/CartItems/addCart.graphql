@@ -1,5 +1,5 @@
-mutation addCart {
-  createCart(cookieId: "", createdAt: "") {
+mutation addCart ($cookieId: String!, $createdAt: String!) {
+  createCart(cookieId: $cookieId, createdAt: $createdAt) {
     cookieId
     createdAt
   }

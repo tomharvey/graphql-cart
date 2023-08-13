@@ -7,11 +7,11 @@ export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Mayb
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 
-function fetcher<TData, TVariables>(endpoint: string, requestInit: RequestInit, query: string, variables?: TVariables) {
+function fetcher<TData, TVariables>(query: string, variables?: TVariables) {
   return async (): Promise<TData> => {
-    const res = await fetch(endpoint, {
-      method: 'POST',
-      ...requestInit,
+    const res = await fetch("https://mvmree46bve3lnx2sprqrzel2a.appsync-api.eu-west-1.amazonaws.com/graphql", {
+    method: "POST",
+    ...({"headers":{"x-api-key":"da2-aa3oncl2frbixh6whaongp6kdq"}}),
       body: JSON.stringify({ query, variables }),
     });
 
@@ -108,7 +108,9 @@ export type AddCartEventMutationVariables = Exact<{ [key: string]: never; }>;
 
 export type AddCartEventMutation = { __typename?: 'Mutation', createCartEvent?: { __typename?: 'CartEvent', action: CartAction, cookieId: string, createdAt: string, photoId: string, productId: string, quantity: number } | null };
 
-export type GetCartQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetCartQueryVariables = Exact<{
+  cookieId: Scalars['String']['input'];
+}>;
 
 
 export type GetCartQuery = { __typename?: 'Query', getCart?: { __typename?: 'Cart', cartEvents?: Array<{ __typename?: 'CartEvent', action: CartAction, cookieId: string, createdAt: string, photoId: string, productId: string, quantity: number } | null> | null } | null };
@@ -125,13 +127,10 @@ export const AddCartDocument = `
 export const useAddCartMutation = <
       TError = unknown,
       TContext = unknown
-    >(
-      dataSource: { endpoint: string, fetchParams?: RequestInit },
-      options?: UseMutationOptions<AddCartMutation, TError, AddCartMutationVariables, TContext>
-    ) =>
+    >(options?: UseMutationOptions<AddCartMutation, TError, AddCartMutationVariables, TContext>) =>
     useMutation<AddCartMutation, TError, AddCartMutationVariables, TContext>(
       ['addCart'],
-      (variables?: AddCartMutationVariables) => fetcher<AddCartMutation, AddCartMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, AddCartDocument, variables)(),
+      (variables?: AddCartMutationVariables) => fetcher<AddCartMutation, AddCartMutationVariables>(AddCartDocument, variables)(),
       options
     );
 export const AddCartEventDocument = `
@@ -156,18 +155,15 @@ export const AddCartEventDocument = `
 export const useAddCartEventMutation = <
       TError = unknown,
       TContext = unknown
-    >(
-      dataSource: { endpoint: string, fetchParams?: RequestInit },
-      options?: UseMutationOptions<AddCartEventMutation, TError, AddCartEventMutationVariables, TContext>
-    ) =>
+    >(options?: UseMutationOptions<AddCartEventMutation, TError, AddCartEventMutationVariables, TContext>) =>
     useMutation<AddCartEventMutation, TError, AddCartEventMutationVariables, TContext>(
       ['addCartEvent'],
-      (variables?: AddCartEventMutationVariables) => fetcher<AddCartEventMutation, AddCartEventMutationVariables>(dataSource.endpoint, dataSource.fetchParams || {}, AddCartEventDocument, variables)(),
+      (variables?: AddCartEventMutationVariables) => fetcher<AddCartEventMutation, AddCartEventMutationVariables>(AddCartEventDocument, variables)(),
       options
     );
 export const GetCartDocument = `
-    query getCart {
-  getCart(cookieId: "") {
+    query getCart($cookieId: String!) {
+  getCart(cookieId: $cookieId) {
     cartEvents {
       action
       cookieId
@@ -183,12 +179,11 @@ export const useGetCartQuery = <
       TData = GetCartQuery,
       TError = unknown
     >(
-      dataSource: { endpoint: string, fetchParams?: RequestInit },
-      variables?: GetCartQueryVariables,
+      variables: GetCartQueryVariables,
       options?: UseQueryOptions<GetCartQuery, TError, TData>
     ) =>
     useQuery<GetCartQuery, TError, TData>(
-      variables === undefined ? ['getCart'] : ['getCart', variables],
-      fetcher<GetCartQuery, GetCartQueryVariables>(dataSource.endpoint, dataSource.fetchParams || {}, GetCartDocument, variables),
+      ['getCart', variables],
+      fetcher<GetCartQuery, GetCartQueryVariables>(GetCartDocument, variables),
       options
     );

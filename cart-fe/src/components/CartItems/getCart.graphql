@@ -1,5 +1,5 @@
-query getCart {
-  getCart(cookieId: "") {
+query getCart ($cookieId: String!) {
+  getCart(cookieId: $cookieId) {
     cartEvents {
       action
       cookieId

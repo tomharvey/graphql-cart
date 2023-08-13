@@ -10,6 +10,11 @@ generates:
       - typescript-operations
       - typescript-react-query
 config:
+  fetcher:
+    endpoint: https://mvmree46bve3lnx2sprqrzel2a.appsync-api.eu-west-1.amazonaws.com/graphql
+    fetchParams:
+      headers:
+        "x-api-key": "da2-aa3oncl2frbixh6whaongp6kdq"
   scalars:
     AWSJSON: string
     AWSDate: string

@@ -1,0 +1,10 @@
+subscription SubscribeCartEvent ($cookieId: String!) {
+    onCartEvent (cookieId: $cookieId) {
+        action
+        cookieId
+        createdAt
+        photoId
+        productId
+        quantity
+    }
+}

@@ -40,3 +40,8 @@ type Query {
 	getCart(cookieId: String!): Cart
 		@aws_apikey
 }
+
+type Subscription {
+    onCartEvent(cookieId: String!): CartEvent
+	@aws_subscribe(mutations: ["createCartEvent"])
+}

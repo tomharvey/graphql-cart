@@ -1,17 +1,45 @@
-import { useState } from "react";
+import { useEffect } from "react";
+import { ulid } from "ulidx";
 import { useGetCartQuery, useAddCartEventMutation, CartAction } from "../../graphql";
 import { useQueryClient } from "@tanstack/react-query";
 import Shop from "../Shop";
+import { useCookies } from "react-cookie";
 
 
-const Cart = () => {
-    const [cookieId, setCookieId] = useState("1459d7d9-08f0-4b05-9bfe-80e312b5b055")
+const cookieName = "cart"
+
+const CartWrapper = () => {
+    const [cookies, setCookie] = useCookies([cookieName]);
+
+    const cartCookie = cookies[cookieName] || {}
+    const cookieId = cartCookie.id
+
+    useEffect(() => {
+        if (!cookieId) {
+            // const id = "1459d7d9-08f0-4b05-9bfe-80e312b5b055"
+            const id = ulid()
+            setCookie(cookieName, {id}, {path: "/", domain: "example.com"})
+        }
+    }, [cookieId, setCookie])
+
+    if (!cookieId)
+        return <p>Setting up cart...</p>
+    
+    return <Cart cookieId={cookieId} />
+}
+
+interface CartProps {
+    cookieId: string
+}
+
+const Cart = ({cookieId}: CartProps) => {
     const queryClient = useQueryClient()
 
     const variables = {cookieId}
-    const queryKey = ['getCart', variables]
     const getCart = useGetCartQuery(variables)
     const cartEvents = getCart.data?.getCart?.cartEvents || []
+
+    const queryKey = ['getCart', variables]
 
     const options = {
         // onSuccess: () => {getCart.refetch()}
@@ -45,7 +73,6 @@ const Cart = () => {
 
     return <Shop
         cookieId={cookieId}
-        setCookieId={setCookieId}
         cartEventCount={cartEvents.length}
         addToCart={addToCart}
         cartIsLoading={getCart.isLoading}
@@ -53,4 +80,4 @@ const Cart = () => {
     />
 }
 
-export default Cart;
+export default CartWrapper;

@@ -2,7 +2,6 @@ import ShopItem from "./ShopItem"
 
 interface ShopProps {
     cookieId: string
-    setCookieId: (cookieId: string) => void
     cartEventCount: number
     addToCart: (photoId: string, productId: string) => void
     cartIsLoading: boolean
@@ -10,7 +9,7 @@ interface ShopProps {
 }
 
 const Shop = ({
-    cookieId, setCookieId,
+    cookieId,
     cartEventCount,
     addToCart: addtoCart,
     cartIsLoading,
@@ -18,7 +17,7 @@ const Shop = ({
 }: ShopProps) => {
     return (
         <> 
-            <input value={cookieId} onChange={(e) => setCookieId(e.target.value)} />
+            <p>{cookieId}</p>
             <p>Cart Events {cartEventCount}</p>
 
             <div>

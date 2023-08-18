@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { ulid } from "ulidx";
 import { useQueryClient } from "@tanstack/react-query";
-// import { useCookies } from "react-cookie";
-import useWindowFocus from "use-window-focus";
 import Cookies from "universal-cookie"
+import useWindowFocus from 'use-window-focus';
 
 import { useGetCartQuery, useAddCartEventMutation, CartAction } from "../../graphql";
 import Shop from "../Shop";
@@ -14,24 +13,19 @@ const cookieName = "cart"
 // const id = "1459d7d9-08f0-4b05-9bfe-80e312b5b055"
 
 const CartWrapper = () => {
-    // const [cookies, setCookie] = useCookies([cookieName]);
-    const windowFocused = useWindowFocus();
-    const [cookieId, setCookieId] = useState()
-
     const cookies = new Cookies()
+    const cartCookie = cookies.get(cookieName)
+    const [cookieId, setCookieId] = useState(cartCookie?.id);
 
-    console.log({windowFocused})    
+    const windowFocused = useWindowFocus();
+
+    console.log({cookieId})
+    console.log({windowFocused})
 
     const resetCookie = () => {
         const id = ulid()
         cookies.set(cookieName, {id}, {path: "/", domain: "example.com"})
-        reactiveSetCookieId()
-    }
-
-    const reactiveSetCookieId = () => {
-        const cartCookie = cookies.get(cookieName)
-        console.log({cartCookie})
-        setCookieId(cartCookie?.id)
+        setCookieId(id)
     }
 
     useEffect(() => {
@@ -41,8 +35,9 @@ const CartWrapper = () => {
     }, [cookieId])
 
     useEffect(() => {
-        reactiveSetCookieId()
-    }, [setCookieId, cookies])
+        const cartCookie = cookies.get(cookieName)
+        setCookieId(cartCookie?.id)
+    }, [setCookieId, windowFocused])
 
     if (!cookieId)
         return <p>Setting up cart...</p>

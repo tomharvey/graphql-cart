@@ -11,28 +11,35 @@ const cookieName = "cart"
 const CartWrapper = () => {
     const [cookies, setCookie] = useCookies([cookieName]);
 
+    console.log({cookies})
+
     const cartCookie = cookies[cookieName] || {}
     const cookieId = cartCookie.id
 
-    useEffect(() => {
+    const resetCookie = () => {
         if (!cookieId) {
             // const id = "1459d7d9-08f0-4b05-9bfe-80e312b5b055"
             const id = ulid()
             setCookie(cookieName, {id}, {path: "/", domain: "example.com"})
         }
+    }
+
+    useEffect(() => {
+        resetCookie()
     }, [cookieId, setCookie])
 
     if (!cookieId)
         return <p>Setting up cart...</p>
     
-    return <Cart cookieId={cookieId} />
+    return <Cart cookieId={cookieId} resetCookie={resetCookie} />
 }
 
 interface CartProps {
     cookieId: string
+    resetCookie: () => void
 }
 
-const Cart = ({cookieId}: CartProps) => {
+const Cart = ({cookieId, resetCookie}: CartProps) => {
     const queryClient = useQueryClient()
 
     const variables = {cookieId}
@@ -71,12 +78,18 @@ const Cart = ({cookieId}: CartProps) => {
         addEvent.mutate(variables)
     }
 
+    const clearCart = () => {
+        // TODO - update the cart to mark as closed
+        resetCookie()
+    }
+
     return <Shop
         cookieId={cookieId}
         cartEventCount={cartEvents.length}
         addToCart={addToCart}
         cartIsLoading={getCart.isLoading}
         cartIsSaving={addEvent.isLoading}
+        clearCart={clearCart}
     />
 }
 

@@ -11,19 +11,19 @@ const Cart = () => {
     const variables = {cookieId}
     const queryKey = ['getCart', variables]
     const getCart = useGetCartQuery(variables)
-    const cartActions = getCart.data?.getCart?.cartEvents || []
+    const cartEvents = getCart.data?.getCart?.cartEvents || []
 
     const options = {
         // onSuccess: () => {getCart.refetch()}
-        onMutate: async (newCartAction: any) => {
+        onMutate: async (newCartEvent: any) => {
             await queryClient.cancelQueries({queryKey})
-            const existingCartActions = queryClient.getQueryData(queryKey)
+            const existingCartEvents = queryClient.getQueryData(queryKey)
             queryClient.setQueryData(queryKey, (old: any) => {
-                return {getCart: {cartEvents: [...old.getCart.cartEvents, newCartAction]}}
+                return {getCart: {cartEvents: [...old.getCart.cartEvents, newCartEvent]}}
             })
-            return { existingCartActions }
+            return { existingCartEvents }
         },
-        onError: (err: any, newCartAction: any, context: any) => {
+        onError: (err: any, newCartEvent: any, context: any) => {
             alert(err)
             queryClient.setQueryData(queryKey, context.previousTodos)
         },
@@ -46,7 +46,7 @@ const Cart = () => {
     return <Shop
         cookieId={cookieId}
         setCookieId={setCookieId}
-        cartActions={cartActions}
+        cartEventCount={cartEvents.length}
         addToCart={addToCart}
         cartIsLoading={getCart.isLoading}
         cartIsSaving={addEvent.isLoading}

@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useGetCartQuery, useAddCartEventMutation, CartAction } from "../../graphql";
 import { useQueryClient } from "@tanstack/react-query";
+import Shop from "../Shop";
 
 
-const CartItems = () => {
+const Cart = () => {
     const [cookieId, setCookieId] = useState("1459d7d9-08f0-4b05-9bfe-80e312b5b055")
     const queryClient = useQueryClient()
 
@@ -42,34 +43,14 @@ const CartItems = () => {
         addEvent.mutate(variables)
     }
 
-    return (
-        <> 
-            <input value={cookieId} onChange={(e) => setCookieId(e.target.value)} />
-            <p>Cart Actions {cartActions.length}</p>
-
-            <div>
-                <ShopItem photoId="1e76dfd9-30c0-4aaa-8421-97fb82b4a2ca" productId="HiRes" addToCart={addToCart} />
-                <ShopItem photoId="20dea8df-9145-46a4-9cc5-6a4d97ef30f2" productId="Facebook" addToCart={addToCart} />
-            </div>
-            {getCart.isLoading && <p>Loading ...</p>}
-            {addEvent.isLoading && <p>Saving ...</p>}
-        </>
-    )
+    return <Shop
+        cookieId={cookieId}
+        setCookieId={setCookieId}
+        cartActions={cartActions}
+        addToCart={addToCart}
+        cartIsLoading={getCart.isLoading}
+        cartIsSaving={addEvent.isLoading}
+    />
 }
 
-export default CartItems;
-
-interface ShopItemProps {
-    photoId: string
-    productId: string
-    addToCart: (photoId: string, productId: string) => void
-}
-
-const ShopItem = ({photoId, productId, addToCart}: ShopItemProps) => {
-    return (
-        <>
-            <p>{photoId} - {productId}</p>
-            <button onClick={() => addToCart(photoId, productId)}>Add 1 to cart</button>
-        </>
-    )
-}
+export default Cart;

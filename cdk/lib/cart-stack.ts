@@ -6,7 +6,6 @@ import {
 	Code,
 	FunctionRuntime,
 	GraphqlApi,
-	InlineCode,
 	Resolver,
 	SchemaFile,
 } from 'aws-cdk-lib/aws-appsync'
@@ -35,19 +34,6 @@ export class CartStack extends Stack {
 			'DDBDataSource',
 			dyanamoDbTable
 		)
-
-		// const passthrough = InlineCode.fromInline(`
-		// 	// The before step
-		// 	export function request(...args) {
-		// 	console.log(args);
-		// 	return {}
-		// 	}
-
-		// 	// The after step
-		// 	export function response(ctx) {
-		// 	return ctx.prev.result
-		// 	}
-		// `)
 
 		const getCartFunc = new AppsyncFunction(this, 'getCart', {
 			name: 'getCart',

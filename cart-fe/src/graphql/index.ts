@@ -98,16 +98,6 @@ export type QueryGetCartArgs = {
   cookieId: Scalars['String']['input'];
 };
 
-export type Subscription = {
-  __typename?: 'Subscription';
-  onCartEvent?: Maybe<CartEvent>;
-};
-
-
-export type SubscriptionOnCartEventArgs = {
-  cookieId: Scalars['String']['input'];
-};
-
 export type AddCartMutationVariables = Exact<{
   cookieId: Scalars['String']['input'];
   createdAt: Scalars['String']['input'];
@@ -134,13 +124,6 @@ export type GetCartQueryVariables = Exact<{
 
 
 export type GetCartQuery = { __typename?: 'Query', getCart?: { __typename?: 'Cart', cartEvents?: Array<{ __typename?: 'CartEvent', action: CartAction, cookieId: string, createdAt: string, photoId: string, productId: string, quantity: number } | null> | null } | null };
-
-export type SubscribeCartEventSubscriptionVariables = Exact<{
-  cookieId: Scalars['String']['input'];
-}>;
-
-
-export type SubscribeCartEventSubscription = { __typename?: 'Subscription', onCartEvent?: { __typename?: 'CartEvent', action: CartAction, cookieId: string, createdAt: string, photoId: string, productId: string, quantity: number } | null };
 
 
 export const AddCartDocument = `
@@ -214,15 +197,3 @@ export const useGetCartQuery = <
       fetcher<GetCartQuery, GetCartQueryVariables>(GetCartDocument, variables),
       options
     );
-export const SubscribeCartEventDocument = `
-    subscription SubscribeCartEvent($cookieId: String!) {
-  onCartEvent(cookieId: $cookieId) {
-    action
-    cookieId
-    createdAt
-    photoId
-    productId
-    quantity
-  }
-}
-    `;

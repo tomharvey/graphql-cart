@@ -1,12 +1,15 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import CartItems from './components/CartItems'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+
+import Cart from './components/Cart'
 
 const queryClient = new QueryClient()
 
 const App = () => {
     return (
         <QueryClientProvider client={queryClient}>
-            <CartItems />
+            <ReactQueryDevtools initialIsOpen={true} />
+            <Cart />
         </QueryClientProvider>
     )
 }
